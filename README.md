@@ -10,9 +10,14 @@ videos, and exercises in the Khan Academy Database.
 License
 -------
 
-This code is [MIT licensed](http://en.wikipedia.org/wiki/MIT_License).
-A copy of this licenses in included in the file
-COPYING.txt
+The KAMediaBrowser source (index.html) is 
+[MIT licensed](http://en.wikipedia.org/wiki/MIT_License).  
+More information in the file COPYING.txt
+
+KAMediaBrowser uses the minimized jQuery JavaScript Library v1.5.2.
+Copyright 2011, John Resig
+Dual licensed under the MIT or GPL Version 2 licenses.
+http://jquery.org/license
 
 enjoy,
 

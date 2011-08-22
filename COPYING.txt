@@ -1,3 +1,6 @@
+
+The KAMediaBrowser implemented in the file index.html is
+
 Copyright (C) 2011 by Brandon Blodget
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -17,4 +20,14 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+
+-------------
+
+The file jquery-1.5.2.min.js 
+is a  minimized jQuery JavaScript Library v1.5.2.
+Copyright 2011, John Resig
+Dual licensed under the MIT or GPL Version 2 licenses.
+http://jquery.org/license
+
 
