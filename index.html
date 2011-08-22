@@ -1,0 +1,204 @@
+<html>
+
+<head>
+	<title>Khan Academy Media Browser</title>
+
+	<link rel="stylesheet" href="main.css" type="text/css">
+</head>
+
+
+<body>
+
+<h2>Khan Academy Media Browser<a class="small_link" href="https://github.com/bblodget">Source on GitHub</a></h2>
+<p>
+An exeriment with the <a href="https://github.com/Khan/khan-api">Khan Academy API</a>
+</p>
+
+<div id="menus">
+
+<label for="playlist_sel">Playlists</label>
+<select name="playlist_sel" id="playlist_sel">
+</select>
+
+<label for="video_sel">Videos</label>
+<select name="video_sel" id="video_sel">
+</select>
+
+<label for="exercise_sel">Exercises</label>
+<select name="exercise_sel" id="exercise_sel">
+</select>
+
+</div>
+
+<div id="video_player">
+<div id="video_player_title">
+<h2>Video</h2>
+</div>
+<center>
+<iframe id="iframe1" width="640" height="390" src="http://www.youtube.com/embed/jxA8MffVmPs?rel=0&amp;hd=1" frameborder="0"
+allowfullscreen></iframe>'
+</center>
+</div>
+
+<div id="exercise_info">
+<div id="exercise_info_title">
+<h2>Exercise</h2>
+</div>
+<div id="exercise_text">
+</div>
+</div>
+
+
+
+</body>
+
+<script type="text/javascript" src="jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="maze.js"></script>
+
+<script type="text/javascript">
+jQuery(function() {
+
+	var exercise_data = {};
+
+	$.getJSON('http://www.khanacademy.org/api/v1/playlists', function(data) {
+	  var items = [];
+	  var i;
+	  var playlist = {};
+
+	  for (i=0; i<data.length; i+= 1) {
+	  	playlist = data[i];
+
+		items.push('<option value="' + playlist.title + '">' + playlist.title + '</option>');
+
+
+	  }
+
+	  items.sort();
+
+	  $('#playlist_sel').html(items.join(''));
+
+	  $('#playlist_sel').change();
+
+
+	});
+
+	$('#playlist_sel').change(
+		function(event) {
+			var playlist_title = "" + $('#playlist_sel').val();
+			var video_json = encodeURI("http://www.khanacademy.org/api/v1/playlists/"+playlist_title+"/videos");
+
+			$.getJSON(video_json, function(data) {
+				  var items = [];
+				  var i;
+				  var video = {};
+
+				  for (i=0; i<data.length; i+= 1) {
+					video = data[i];
+					items.push('<option value="' + video.youtube_id + '">' + video.title + '</option>');
+				  }
+				  $('#video_sel').html(items.join(''));
+
+				  $('#video_sel').change();
+
+			});
+	});
+
+	$('#playlist_sel').change(
+		function(event) {
+			var playlist_title = "" + $('#playlist_sel').val();
+			var exercise_json = encodeURI("http://www.khanacademy.org/api/v1/playlists/"+playlist_title+"/exercises");
+
+			$.getJSON(exercise_json, function(data) {
+				  var items = [];
+				  var i;
+				  var exercise = {};
+				  exercise_data = {};
+
+				  for (i=0; i<data.length; i+= 1) {
+					exercise = data[i];
+					exercise_data[exercise.name] = data[i];
+					items.push('<option value="' + exercise.name + '">' + exercise.display_name + '</option>');
+				  }
+				  $('#exercise_sel').html(items.join(''));
+				  $('#exercise_sel').change();
+
+			});
+	});
+
+
+
+	$('#video_sel').change(
+		function(event) {
+			var youtube_id =  $('#video_sel').val();
+			var youtube_title =  $('#video_sel :selected').text();
+			var youtube_url = "http://www.youtube.com/embed/"+youtube_id+"?rel=0&amp;hd=1";
+			var video_ex_json = encodeURI("http://www.khanacademy.org/api/v1/videos/"+youtube_id+"/exercises");
+
+			$('#video_player_title h2').html("Video: "+youtube_title);
+			$('#iframe1').attr('src',youtube_url);
+
+			// alert("video_ex_json: "+video_ex_json);
+
+			$.getJSON(video_ex_json, function(data) {
+				  var items = [];
+				  var i;
+				  var exercise = {};
+
+				  for (i=0; i<data.length; i+= 1) {
+					exercise = data[i];
+				    // $('#exercise_sel option[value='+exercise.name+']').text("--> "+exercise.display_name+" <--");
+				    $('#exercise_sel option[value='+exercise.name+']').attr("selected","selected");
+				  }
+
+				  $('#exercise_sel').change();
+
+			});
+
+
+	});
+
+	$('#exercise_sel').change( function(event) {
+		var name = $('#exercise_sel option:selected').first().attr("value");
+		var items = [];
+		var i;
+		var list;
+
+		if (typeof name === 'string') {
+
+			for (var key in exercise_data[name]) {
+				if (exercise_data[name].hasOwnProperty(key)) {
+					if (typeof exercise_data[name][key] === 'string' || 
+						typeof exercise_data[name][key] === 'number' ||
+						typeof exercise_data[name][key] === 'boolean') {
+						items.push(key + " : " + exercise_data[name][key] + " <br>");
+					}
+					if (typeof exercise_data[name][key] === 'object') {
+						list = exercise_data[name][key].join(', ');
+						items.push(key + " : [" + list + "] <br>");
+					}
+				}
+			}
+
+			$('#exercise_info_title h2').html('Exercise: <a href="http://www.khanacademy.org/exercises?exid='+name+'">'+exercise_data[name]["display_name"]+'</a>');
+			$('#exercise_text').html(items.join(''));
+
+		} else {
+			$('#exercise_info_title h2').html("Exercise: None");
+			$('#exercise_text').html("");
+		}
+
+	});
+
+
+
+
+	
+
+
+
+});
+</script>
+
+
+
+</html>
