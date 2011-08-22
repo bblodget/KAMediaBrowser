@@ -6,6 +6,10 @@ This is a simple web app demoing the
 It implements a browser for viewing playlists,
 videos, and exercises in the Khan Academy Database.
 
+The KAMediaBrowser is running online at
+
+[http://bblodget.github.com/KAMediaBrowser](http://bblodget.github.com/KAMediaBrowser)
+
 
 License
 -------
